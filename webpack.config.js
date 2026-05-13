@@ -40,6 +40,7 @@ module.exports = {
         { from: "assets", to: "assets" },
         { from: "src/taskpane/taskpane.css", to: "taskpane.css" },
         { from: "src/privacy.html", to: "privacy.html" },
+        { from: "src/eula.html", to: "eula.html" },
       ],
     }),
   ],
