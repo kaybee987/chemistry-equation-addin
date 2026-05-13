@@ -1,0 +1,45 @@
+const path = require("path");
+const fs = require("fs");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+
+const certPath = path.join(require("os").homedir(), ".office-addin-dev-certs");
+
+module.exports = {
+  entry: {
+    taskpane: "./src/taskpane/taskpane.js",
+  },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].js",
+    clean: true,
+  },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
+    port: 3000,
+    https: {
+      key: fs.readFileSync(path.join(certPath, "localhost.key")),
+      cert: fs.readFileSync(path.join(certPath, "localhost.crt")),
+      ca: fs.readFileSync(path.join(certPath, "ca.crt")),
+    },
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/taskpane/taskpane.html",
+      filename: "taskpane.html",
+      chunks: ["taskpane"],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: "manifest.xml", to: "manifest.xml" },
+        { from: "assets", to: "assets" },
+        { from: "src/taskpane/taskpane.css", to: "taskpane.css" },
+      ],
+    }),
+  ],
+};

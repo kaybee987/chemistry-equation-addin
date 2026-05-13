@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chemistry Equation Editor</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="stylesheet" href="./taskpane.css"/>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>Chemistry Equation Editor</h1>
+    </header>
+
+    <!-- Main Tabs -->
+    <div class="main-tab-bar">
+      <button class="main-tab active" data-target="equation-builder-view">Equation Builder</button>
+      <button class="main-tab" data-target="formula-reference-view">Formula Handbook</button>
+    </div>
+
+    <!-- ========== EQUATION BUILDER VIEW ========== -->
+    <div id="equation-builder-view" class="main-view active">
+      <section id="equation-builder">
+        <div class="section-header">
+          <h2>Equation</h2>
+          <button id="btn-clear" class="btn-small btn-secondary" title="Clear all">Clear</button>
+        </div>
+
+        <!-- Live Preview -->
+        <div id="equation-preview" class="preview-box">
+          <span class="placeholder">Preview will appear here...</span>
+        </div>
+
+        <!-- Autoformat toggle -->
+        <div class="autoformat-toggle">
+          <label>
+            <input type="checkbox" id="autoformat-enabled" checked/>
+            Autoformat common elements, ions and groups
+          </label>
+        </div>
+
+        <!-- Reactants -->
+        <div class="component-section">
+          <div class="section-label">
+            <span>Reactants</span>
+            <button id="btn-add-reactant" class="btn-small btn-add" title="Add reactant">+</button>
+          </div>
+          <div id="reactants-list" class="components-list"></div>
+        </div>
+
+        <!-- Arrow Type -->
+        <div class="arrow-section">
+          <div class="section-label"><span>Reaction Arrow</span></div>
+          <div class="arrow-controls">
+            <select id="arrow-type">
+              <option value="forward">&#8594; Forward</option>
+              <option value="reverse">&#8592; Reverse</option>
+              <option value="equilibrium">&#8652; Equilibrium</option>
+              <option value="reversible">&#8644; Reversible</option>
+              <option value="resonance">&#8596; Resonance</option>
+              <option value="no-reaction">&#8603; No reaction (crossed)</option>
+              <option value="harpoon-right">&#8640; Harpoon right</option>
+              <option value="harpoon-left">&#8637; Harpoon left</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <label>Arrow head:</label>
+            <select id="arrow-head">
+              <option value="filled">&#9654; Filled triangle</option>
+              <option value="classic">&#9655; Classic (narrow)</option>
+              <option value="open">&#9651; Open (outline)</option>
+              <option value="barbed">&#10217; Barbed/stealth</option>
+              <option value="harpoon">&#8968; Harpoon (half)</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <label>Arrow length:</label>
+            <input type="range" id="arrow-length" min="80" max="300" value="150" step="10"/>
+            <span id="arrow-length-val">150px</span>
+          </div>
+          <div class="above-below-controls">
+            <div class="field-row">
+              <label>Above arrow:</label>
+              <input type="text" id="above-arrow" placeholder="e.g. catalyst, &#916;, h&#957;"/>
+            </div>
+            <div class="field-row">
+              <label>Below arrow:</label>
+              <input type="text" id="below-arrow" placeholder="e.g. solvent, temp, pressure"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products -->
+        <div class="component-section">
+          <div class="section-label">
+            <span>Products</span>
+            <button id="btn-add-product" class="btn-small btn-add" title="Add product">+</button>
+          </div>
+          <div id="products-list" class="components-list"></div>
+        </div>
+      </section>
+
+      <!-- Symbol Library -->
+      <section id="symbol-library">
+        <h2>Symbol Library</h2>
+        <div class="symbol-tabs">
+          <button class="symbol-tab active" data-tab="common">Common</button>
+          <button class="symbol-tab" data-tab="states">States</button>
+          <button class="symbol-tab" data-tab="greek">Greek</button>
+          <button class="symbol-tab" data-tab="subscripts">Sub/Super</button>
+        </div>
+        <div class="symbol-panels">
+          <div class="symbol-panel" id="panel-states">
+            <button class="sym-btn" data-symbol="(s)" title="Solid">(s)</button>
+            <button class="sym-btn" data-symbol="(l)" title="Liquid">(l)</button>
+            <button class="sym-btn" data-symbol="(g)" title="Gas">(g)</button>
+            <button class="sym-btn" data-symbol="(aq)" title="Aqueous">(aq)</button>
+            <button class="sym-btn" data-symbol="&#8593;" title="Gas evolved">&#8593;</button>
+            <button class="sym-btn" data-symbol="&#8595;" title="Precipitate">&#8595;</button>
+            <button class="sym-btn" data-symbol="(conc)" title="Concentrated">(conc)</button>
+            <button class="sym-btn" data-symbol="(dil)" title="Dilute">(dil)</button>
+          </div>
+          <div class="symbol-panel active" id="panel-common">
+            <button class="sym-btn" data-symbol="°C" title="Degree Celsius">°C</button>
+            <button class="sym-btn" data-symbol="°F" title="Degree Fahrenheit">°F</button>
+            <button class="sym-btn" data-symbol="K" title="Kelvin">K</button>
+            <button class="sym-btn" data-symbol="&#916;" title="Heat/Delta">&#916;</button>
+            <button class="sym-btn" data-symbol="&#948;+" title="Partial positive">&#948;+</button>
+            <button class="sym-btn" data-symbol="&#948;&#8722;" title="Partial negative">&#948;&#8722;</button>
+            <button class="sym-btn" data-symbol="h&#957;" title="Light/photon">h&#957;</button>
+            <button class="sym-btn" data-symbol="&#183;" title="Radical dot">&#183;</button>
+            <button class="sym-btn" data-symbol="°" title="Degree">°</button>
+            <button class="sym-btn" data-symbol="&#177;" title="Plus minus">&#177;</button>
+            <button class="sym-btn" data-symbol="&#8734;" title="Infinity">&#8734;</button>
+            <button class="sym-btn" data-symbol="&#8854;" title="Standard state">&#8854;</button>
+            <button class="sym-btn" data-symbol="&#8225;" title="Transition state">&#8225;</button>
+            <button class="sym-btn" data-symbol="&#8226;" title="Dot">&#8226;</button>
+            <button class="sym-btn" data-symbol="&#8801;" title="Triple bond">&#8801;</button>
+            <button class="sym-btn" data-symbol="=" title="Double bond">=</button>
+            <button class="sym-btn" data-symbol="&#8722;" title="Single bond/minus">&#8722;</button>
+            <button class="sym-btn" data-symbol="+" title="Plus">+</button>
+            <button class="sym-btn" data-symbol="&#8314;" title="Superscript plus">&#8314;</button>
+            <button class="sym-btn" data-symbol="&#8315;" title="Superscript minus">&#8315;</button>
+          </div>
+          <div class="symbol-panel" id="panel-greek">
+            <button class="sym-btn" data-symbol="&#945;">&#945;</button>
+            <button class="sym-btn" data-symbol="&#946;">&#946;</button>
+            <button class="sym-btn" data-symbol="&#947;">&#947;</button>
+            <button class="sym-btn" data-symbol="&#948;">&#948;</button>
+            <button class="sym-btn" data-symbol="&#949;">&#949;</button>
+            <button class="sym-btn" data-symbol="&#951;">&#951;</button>
+            <button class="sym-btn" data-symbol="&#952;">&#952;</button>
+            <button class="sym-btn" data-symbol="&#955;">&#955;</button>
+            <button class="sym-btn" data-symbol="&#956;">&#956;</button>
+            <button class="sym-btn" data-symbol="&#960;">&#960;</button>
+            <button class="sym-btn" data-symbol="&#963;">&#963;</button>
+            <button class="sym-btn" data-symbol="&#969;">&#969;</button>
+            <button class="sym-btn" data-symbol="&#931;">&#931;</button>
+            <button class="sym-btn" data-symbol="&#937;">&#937;</button>
+            <button class="sym-btn" data-symbol="&#934;">&#934;</button>
+          </div>
+          <div class="symbol-panel" id="panel-subscripts">
+            <button class="sym-btn" data-symbol="&#8320;">&#8320;</button>
+            <button class="sym-btn" data-symbol="&#8321;">&#8321;</button>
+            <button class="sym-btn" data-symbol="&#8322;">&#8322;</button>
+            <button class="sym-btn" data-symbol="&#8323;">&#8323;</button>
+            <button class="sym-btn" data-symbol="&#8324;">&#8324;</button>
+            <button class="sym-btn" data-symbol="&#8325;">&#8325;</button>
+            <button class="sym-btn" data-symbol="&#8326;">&#8326;</button>
+            <button class="sym-btn" data-symbol="&#8327;">&#8327;</button>
+            <button class="sym-btn" data-symbol="&#8328;">&#8328;</button>
+            <button class="sym-btn" data-symbol="&#8329;">&#8329;</button>
+            <button class="sym-btn" data-symbol="&#8304;">&#8304;</button>
+            <button class="sym-btn" data-symbol="&#185;">&#185;</button>
+            <button class="sym-btn" data-symbol="&#178;">&#178;</button>
+            <button class="sym-btn" data-symbol="&#179;">&#179;</button>
+            <button class="sym-btn" data-symbol="&#8308;">&#8308;</button>
+            <button class="sym-btn" data-symbol="&#8309;">&#8309;</button>
+            <button class="sym-btn" data-symbol="&#8310;">&#8310;</button>
+            <button class="sym-btn" data-symbol="&#8311;">&#8311;</button>
+            <button class="sym-btn" data-symbol="&#8312;">&#8312;</button>
+            <button class="sym-btn" data-symbol="&#8313;">&#8313;</button>
+            <button class="sym-btn" data-symbol="&#8345;">&#8345;</button>
+            <button class="sym-btn" data-symbol="&#8339;">&#8339;</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ========== FORMULA REFERENCE VIEW ========== -->
+    <div id="formula-reference-view" class="main-view">
+      <div class="formula-search">
+        <input type="text" id="formula-search-input" placeholder="Search by name, category, or variable..."/>
+      </div>
+      <div class="formula-categories" id="formula-categories"></div>
+      <div id="formula-list" class="formula-list"></div>
+    </div>
+  </div>
+
+  <div class="fixed-bottom">
+    <button id="btn-insert" class="btn-primary">Insert into Document</button>
+  </div>
+</body>
+</html>
