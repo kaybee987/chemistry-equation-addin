@@ -39,6 +39,7 @@ module.exports = {
         { from: "manifest.xml", to: "manifest.xml" },
         { from: "assets", to: "assets" },
         { from: "src/taskpane/taskpane.css", to: "taskpane.css" },
+        { from: "src/privacy.html", to: "privacy.html" },
       ],
     }),
   ],
